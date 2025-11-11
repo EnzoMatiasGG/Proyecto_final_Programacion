@@ -24,7 +24,7 @@ class Kamehameha:
         
         # Control de tiempo
         self.tiempo_inicio = pygame.time.get_ticks()
-        self.duracion = 1000  # 1 segundo (reducido un tercio)
+        self.duracion = 1000  
         self.velocidad_expansion = 15  # Píxeles por frame
         
         # Partes del kamehameha
@@ -49,14 +49,13 @@ class Kamehameha:
         # Calcular centro vertical
         centro_y = self.origen_y + self.sprite_personaje.get_height() // 2
         
-        # Calcular distancia (se detiene si ya impactó)
+        # Calcular distancia (se detiene si ya impacto)
         if not self.impacto:
             distancia = (tiempo_transcurrido - 100) / 10 * self.velocidad_expansion
             self.distancia_maxima = distancia
         else:
-            distancia = self.distancia_maxima  # Mantener la distancia del impacto
-        
-        # FASE 1: Punta del kamehameha (aparece a los 100ms)
+            distancia = self.distancia_maxima  
+        # FASE 1: Punta del kamehameha 
         if tiempo_transcurrido >= 100 and self.imagen_final:
             if self.direccion:  # Derecha
                 x_final = self.origen_x + distancia
@@ -70,7 +69,7 @@ class Kamehameha:
                 'imagen': self.imagen_final
             })
         
-        # FASE 2: Cuerpo del kamehameha (aparece a los 300ms)
+        # FASE 2: Cuerpo del kamehameha 
         if tiempo_transcurrido >= 300 and self.imagen_cuerpo and len(self.partes) > 0:
             if self.direccion:  # Derecha
                 x_cuerpo = self.origen_x
@@ -79,7 +78,6 @@ class Kamehameha:
                 ancho_cuerpo = self.origen_x - (self.partes[0]['x'] + self.imagen_final.get_width())
                 x_cuerpo = self.partes[0]['x'] + self.imagen_final.get_width()
             
-            # Escalar el cuerpo dinámicamente
             if ancho_cuerpo > 0:
                 cuerpo_escalado = pygame.transform.scale(
                     self.imagen_cuerpo,
@@ -93,7 +91,7 @@ class Kamehameha:
                     'imagen': cuerpo_escalado
                 })
         
-        # FASE 3: Inicio del kamehameha (aparece a los 500ms)
+        # FASE 3: Inicio del kamehameha 
         if tiempo_transcurrido >= 500 and self.imagen_inicio:
             if self.direccion:  # Derecha
                 x_inicio = self.origen_x
@@ -111,7 +109,7 @@ class Kamehameha:
         """Dibuja todas las partes del kamehameha"""
         if not self.activo:
             return
-        # Dibujar en orden: inicio, cuerpo, final
+        # Dibuja en orden: inicio, cuerpo, final
         partes_ordenadas = sorted(self.partes, key=lambda p: ['inicio', 'cuerpo', 'final'].index(p['tipo']))
         
         for parte in partes_ordenadas:
