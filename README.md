@@ -62,7 +62,7 @@ PROYECTOFINALPROGRA_1/
 │
 ├── Data/
 │ ├── records_torre.txt # Datos de records del modo torre
-│ ├── recordsJson # (Carpeta o archivo, segun tu estructura)
+│ ├── recordsJson 
 │ └── records.txt # Datos adicionales de records
 │
 ├── Fondos/ # Fondos graficos del juego
