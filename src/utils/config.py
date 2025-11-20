@@ -1,20 +1,19 @@
-"""
-Configuración global del juego.
-Contiene todas las constantes utilizadas en el proyecto.
-"""
+# Configuracion global del juego
+# Contiene todas las constantes utilizadas en el proyecto
+
 import pygame
 
-# ============================================================================
-# CONFIGURACIÓN DE PANTALLA
-# ============================================================================
+
+# CONFIGURACION DE PANTALLA
+
 ANCHO = 800
 ALTO = 600
 FPS = 60
 FPS_MENU = 30
 
-# ============================================================================
+
 # PALETA DE COLORES
-# ============================================================================
+
 NARANJA = (255, 165, 0)
 AMARILLO = (255, 255, 0)
 NEGRO = (0, 0, 0)
@@ -29,42 +28,42 @@ COLOR_BARRA_VIDA_FONDO = (60, 0, 0)
 COLOR_BARRA_STAMINA = (0, 200, 255)
 COLOR_BARRA_STAMINA_FONDO = (0, 40, 60)
 
-# ============================================================================
+
 # CONTROLES - JUGADOR 1
-# ============================================================================
+
 CONTROLES_JUGADOR1 = {
-    "izquierda": pygame.K_a,
-    "derecha": pygame.K_d,
-    "arriba": pygame.K_w,
-    "abajo": pygame.K_s,
-    "golpe_ligero": pygame.K_j,
-    "patada": pygame.K_k,
-    "cubrirse": pygame.K_l,
-    "bola": pygame.K_i,
-    "kamehameha": pygame.K_o,
-    "movimiento_final": pygame.K_p,
+    "izquierda" : pygame.K_a,
+    "derecha" : pygame.K_d,
+    "arriba" : pygame.K_w,
+    "abajo" : pygame.K_s,
+    "golpe_ligero" : pygame.K_j,
+    "patada" : pygame.K_k,
+    "cubrirse" : pygame.K_l,
+    "bola" : pygame.K_i,
+    "kamehameha" : pygame.K_o,
+    "movimiento_final" : pygame.K_p,
 }
 
-# ============================================================================
+
 # CONTROLES - JUGADOR 2
-# ============================================================================
+
 CONTROLES_JUGADOR2 = {
-    'izquierda': pygame.K_LEFT,
-    'derecha': pygame.K_RIGHT,
-    'arriba': pygame.K_UP,
-    'abajo': pygame.K_DOWN,
-    'golpe_ligero': pygame.K_KP1,
-    'patada': pygame.K_KP2,
-    'cubrirse': pygame.K_KP4,
-    'bola': pygame.K_KP3,
-    'movimiento_final': pygame.K_KP5,
+    "izquierda" : pygame.K_LEFT,
+    "derecha" : pygame.K_RIGHT,
+    "arriba" : pygame.K_UP,
+    "abajo" : pygame.K_DOWN,
+    "golpe_ligero" : pygame.K_KP1,
+    "patada" : pygame.K_KP2,
+    "cubrirse" : pygame.K_KP4,
+    "bola" : pygame.K_KP3,
+    "movimiento_final" : pygame.K_KP5,
 }
 
-# ============================================================================
-# PARÁMETROS DE COMBATE
-# ============================================================================
-class CombatConfig:
-    """Configuración del sistema de combate"""
+
+# PARAMETROS DE COMBATE
+
+class CombatConfig :
+    """Configuracion del sistema de combate"""
     
     # Vida y Stamina
     VIDA_MAXIMA = 100
@@ -73,17 +72,17 @@ class CombatConfig:
     
     # Costos de Stamina
     COSTO_GOLPE = 5
-    COSTO_PATADA = 8
+    COSTO_PATADA = 8    
     COSTO_BOLA = 15
     COSTO_KAMEHAMEHA = 50
     COSTO_MOVIMIENTO_FINAL = 80
     
     # Daño de Ataques
-    DANO_GOLPE = 5           # Puño (más débil)
-    DANO_PATADA = 8          # Patada (medio-bajo)
-    DANO_BOLA = 12           # Bola de energía "i" (medio-alto)
-    DANO_KAMEHAMEHA = 1.5    # Kamehameha "o" (fuerte, por tick)
-    DANO_MOVIMIENTO_FINAL = 25  # Movimiento final "p" (muy fuerte)
+    DANO_GOLPE = 5           
+    DANO_PATADA = 3         
+    DANO_BOLA = 12           
+    DANO_KAMEHAMEHA = 1.5    
+    DANO_MOVIMIENTO_FINAL = 25  
     
     # Sistema de Combos
     GOLPES_PARA_ATURDIR = 4
@@ -92,13 +91,13 @@ class CombatConfig:
     MULTIPLICADOR_DANO_ATURDIDO = 2.0
     
     # Defensa
-    REDUCCION_DANO_CUBIERTO = 0.3  # 70% de reducción
+    REDUCCION_DANO_CUBIERTO = 0.3  # 70% de reduccion
 
-# ============================================================================
-# PARÁMETROS DE TIEMPO
-# ============================================================================
-class TimeConfig:
-    """Configuración de tiempos del juego"""
+
+# PARAMETROS DE TIEMPO
+
+class TimeConfig :
+    """Configuracion de tiempos del juego"""
     
     # Combate
     TIEMPO_COMBATE = 60  # segundos
@@ -120,58 +119,58 @@ class TimeConfig:
     DURACION_KAMEHAMEHA = 1000  # ms
     TIEMPO_FRAME_MOVIMIENTO_FINAL = 200  # ms
 
-# ============================================================================
+
 # ROUNDS
-# ============================================================================
-class RoundsConfig:
-    """Configuración del sistema de rounds"""
+
+class RoundsConfig :
+    """Configuracion del sistema de rounds"""
     
     MAX_ROUNDS = 2  # Primero en ganar 2
     DURACION_CUENTA_REGRESIVA = 4500  # ms
 
-# ============================================================================
+
 # IA
-# ============================================================================
-class IAConfig:
-    """Configuración de la inteligencia artificial"""
+
+class IAConfig :
+    """Configuracion de la inteligencia artificial"""
     
-    # Dificultad FÁCIL
+    # Dificultad FACIL
     FACIL = {
-        'velocidad': 4,
-        'tiempo_reaccion': 700,
-        'prob_ataque': 0.75,
-        'prob_defensa': 0.3,
-        'prob_especial': 0.25,
-        'distancia_ataque': 110,
-        'distancia_minima': 45
+        "velocidad" : 4,
+        "tiempo_reaccion" : 700,
+        "prob_ataque" : 0.75,
+        "prob_defensa" : 0.3,
+        "prob_especial" : 0.25,
+        "distancia_ataque" : 110,
+        "distancia_minima" : 45
     }
     
     # Dificultad NORMAL
     NORMAL = {
-        'velocidad': 6,
-        'tiempo_reaccion': 350,
-        'prob_ataque': 0.9,
-        'prob_defensa': 0.55,
-        'prob_especial': 0.5,
-        'distancia_ataque': 105,
-        'distancia_minima': 40
+        "velocidad" : 6,
+        "tiempo_reaccion" : 350,
+        "prob_ataque" : 0.9,
+        "prob_defensa" : 0.55,
+        "prob_especial" : 0.5,
+        "distancia_ataque" : 105,
+        "distancia_minima" : 40
     }
     
-    # Dificultad DIFÍCIL
+    # Dificultad DIFICIL
     DIFICIL = {
-        'velocidad': 9,
-        'tiempo_reaccion': 150,
-        'prob_ataque': 0.98,
-        'prob_defensa': 0.75,
-        'prob_especial': 0.7,
-        'distancia_ataque': 100,
-        'distancia_minima': 35
+        "velocidad" : 9,
+        "tiempo_reaccion" : 150,
+        "prob_ataque" : 0.98,
+        "prob_defensa" : 0.75,
+        "prob_especial" : 0.7,
+        "distancia_ataque" : 100,
+        "distancia_minima" : 35
     }
 
-# ============================================================================
+
 # RUTAS DE RECURSOS
-# ============================================================================
-class Paths:
+
+class Paths :
     """Rutas de archivos de recursos"""
     
     # Directorios
@@ -184,7 +183,7 @@ class Paths:
     # Fuentes
     FUENTE_PRINCIPAL = "Fuentes/PressStart2P.ttf"
     
-    # Imágenes especiales
+    # Imagenes especiales
     ICONO_VENTANA = "Assets/Imagenes_especiales/Icono_ventana.png"
     IMAGEN_VS = "Assets/Imagenes_especiales/vs.png"
     ICONO_Z = "Assets/Imagenes_especiales/Z-logo.png"
@@ -206,11 +205,11 @@ class Paths:
     RECORDS_1VS1 = "data/records.json"
     RECORDS_TORRE = "data/records_torre.json"
 
-# ============================================================================
-# CONFIGURACIÓN DE TORRE
-# ============================================================================
-class TowerConfig:
-    """Configuración del modo Torre"""
+
+# CONFIGURACION DE TORRE
+
+class TowerConfig :
+    """Configuracion del modo Torre"""
     
     NUMERO_PELEAS = 3
     
@@ -223,11 +222,11 @@ class TowerConfig:
     BONUS_TIEMPO_RAPIDO_180 = 1000  # < 3 minutos
     BONUS_TIEMPO_RAPIDO_300 = 500   # < 5 minutos
 
-# ============================================================================
-# CONFIGURACIÓN DE RÉCORDS
-# ============================================================================
-class RecordsConfig:
-    """Configuración del sistema de récords"""
+
+# CONFIGURACION DE ReCORDS
+
+class RecordsConfig :
+    """Configuracion del sistema de records"""
     
     # Puntajes 1vs1
     PUNTOS_POR_ROUND = 1000
@@ -240,11 +239,11 @@ class RecordsConfig:
     BONUS_TIEMPO_120 = 300  # < 2 minutos
     BONUS_TIEMPO_180 = 100  # < 3 minutos
 
-# ============================================================================
-# CONFIGURACIÓN DE SPRITES
-# ============================================================================
-class SpriteConfig:
-    """Configuración de sprites"""
+
+# CONFIGURACION DE SPRITES
+
+class SpriteConfig :
+    """Configuracion de sprites"""
     
     ESCALA_DEFAULT = 2
     COLORKEY_BLANCO = (255, 255, 255)
@@ -254,5 +253,5 @@ class SpriteConfig:
     ICONO_PERSONAJE_SELECCION = (120, 120)
     PREVIEW_MAPA = (160, 120)
     
-    # Animación KO
+    # Animacion KO
     KO_TIEMPO_FRAME = 300  # ms
