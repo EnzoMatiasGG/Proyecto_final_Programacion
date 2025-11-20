@@ -62,72 +62,98 @@ def main() :
             if modo == "Volver" :
                 continue
             
-            elif modo == "Pelea Rapida" :
+            if modo == "Pelea Rapida":
+                # Seleccionar personajes
+                personaje_j1 = menu_manager.menu_seleccion_personaje(1)
+                if personaje_j1 is None:
+                    continue
+                
+                personaje_j2 = menu_manager.menu_seleccion_personaje(2)
+                if personaje_j2 is None:
+                    continue
+                
+                # Seleccionar mapa
+                mapa_seleccionado = menu_manager.menu_seleccion_mapa()
+                if mapa_seleccionado is None:
+                    continue
+                
+                # Crear el juego
+                juego = GameEngine(
+                    pantalla, 
+                    reloj, 
+                    sprites_personajes,
+                    mapa_seleccionado, 
+                    personaje_j1,  
+                    personaje_j2,  
+                    es_modo_torre=False,
+                    audio_manager=audio_manager,
+                    menu_manager=menu_manager  
+                )
+                
+                # Ejecutar el juego
+                juego.ejecutar(personaje_j1, personaje_j2)
+
+            # MODO TORRE  
+            elif modo == "Modo Torre":
+                # Seleccionar personaje
+                personaje_j1 = menu_manager.menu_seleccion_personaje(1)
+                if personaje_j1 is None:
+                    continue
+                
                 # Seleccionar dificultad
                 dificultad = menu_manager.menu_seleccion_dificultad()
-                if dificultad is None :
-                    continue
-                
-                # Seleccionar personaje
-                personaje1 = menu_manager.menu_seleccion_personaje(1)
-                if personaje1 is None :
+                if dificultad is None:
                     continue
                 
                 # Seleccionar mapa
                 mapa_seleccionado = menu_manager.menu_seleccion_mapa()
-                if mapa_seleccionado is None :
-                    continue
-                
-                # Oponente fijo (IA)
-                personaje2 = "freezer"
-                
-                # Crear y ejecutar juego
-                juego = GameEngine(pantalla, reloj, sprites_personajes, mapa_seleccionado, personaje1, personaje2, es_modo_torre=False, audio_manager=audio_manager)
-                juego.dificultad_1vs1 = dificultad
-                juego.ejecutar(personaje1, personaje2)
-            
-            elif modo == "Modo Torre" :
-                # Seleccionar personaje
-                personaje1 = menu_manager.menu_seleccion_personaje(1)
-                if personaje1 is None :
-                    continue
-                
-                # Seleccionar mapa
-                mapa_seleccionado = menu_manager.menu_seleccion_mapa()
-                if mapa_seleccionado is None :
+                if mapa_seleccionado is None:
                     continue
                 
                 # Iniciar torre
                 torre_manager = TowerManager(pantalla, reloj, personajes_data)
-                torre_manager.iniciar_torre(personaje1)
+                torre_manager.iniciar_torre(personaje_j1)
                 
-                if not torre_manager.mostrar_pantalla_torre() :
+                if not torre_manager.mostrar_pantalla_torre():
                     continue
                 
                 # Loop de la torre
                 torre_abandonada = False
-                while not torre_manager.esta_completada() and not torre_abandonada :
-                    oponente = torre_manager.obtener_oponente_actual()
+                while not torre_manager.esta_completada() and not torre_abandonada:
+                    # Obtener oponente actual
+                    personaje_j2 = torre_manager.obtener_oponente_actual()
                     
-                    juego = GameEngine(pantalla, reloj, sprites_personajes, mapa_seleccionado, personaje1, oponente, es_modo_torre=True, audio_manager=audio_manager)
+                    # Crear el juego para esta pelea
+                    juego = GameEngine(
+                        pantalla, 
+                        reloj, 
+                        sprites_personajes,
+                        mapa_seleccionado, 
+                        personaje_j1,  
+                        personaje_j2,  
+                        es_modo_torre=True,
+                        audio_manager=audio_manager,
+                        menu_manager=menu_manager  
+                    )
+                    
                     juego.nivel_torre = torre_manager.pelea_actual
-                    juego.ejecutar(personaje1, oponente, torre_manager.pelea_actual)
+                    juego.ejecutar(personaje_j1, personaje_j2, torre_manager.pelea_actual)
                     
-                    if juego.rounds_manager.rounds_jugador1 >= 2 :
-                        # Jugador gano la pelea
+                    if juego.rounds_manager.rounds_jugador1 >= 2:
+                        # Jugador ganó la pelea
                         tiempo_pelea = (pygame.time.get_ticks() - juego.rounds_manager.tiempo_inicio_pelea_total) // 1000
                         stats = juego.collision_system.obtener_estadisticas()
                         torre_manager.agregar_stats_pelea(stats["jugador1"], tiempo_pelea)
                         torre_manager.avanzar_pelea()
                         
-                        if not torre_manager.esta_completada() :
-                            if not torre_manager.mostrar_pantalla_torre() :
+                        if not torre_manager.esta_completada():
+                            if not torre_manager.mostrar_pantalla_torre():
                                 torre_abandonada = True
-                        else :
+                        else:
                             # Torre completada
                             torre_manager.mostrar_pantalla_victoria_torre()
-                    else :
-                        # Jugador perdio
+                    else:
+                        # Jugador perdió
                         torre_manager.mostrar_pantalla_game_over()
                         break
         

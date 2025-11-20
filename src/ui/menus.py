@@ -448,7 +448,7 @@ class MenuManager :
         self.pantalla.blit(texto_boton, rect_texto_boton)
         
         pygame.display.flip()
-    
+
     def mostrar_lore_personaje(self, indice : int) :
         """Muestra el lore de un personaje"""
         pj = self.personajes_data[indice]
@@ -657,3 +657,192 @@ class MenuManager :
             self.audio_manager.bajar_volumen()
         elif tecla in [pygame.K_PLUS, pygame.K_KP_PLUS, pygame.K_EQUALS] :
             self.audio_manager.subir_volumen()
+
+    def menu_pausa(self, juego) -> bool:
+        """Menu de pausa durante el combate. Retorna True si continua, False si sale"""
+        opciones = ["Continuar", "Cheats", "Volver al menu"]
+        seleccion = 0
+
+        # Cargar imagen del Dragon Radar
+        try:
+            radar_img = pygame.image.load(Paths.DRAGON_RADAR).convert_alpha()
+            escalar = int(ALTO * 0.6)
+            radar_img = pygame.transform.smoothscale(radar_img, (escalar, escalar))
+            radar_rect = radar_img.get_rect(center=(ANCHO // 2, ALTO // 2))
+        except:
+            radar_img = None
+            radar_rect = None
+
+        fondo_pausa = self.pantalla.copy()
+
+        while True:
+            for evento in pygame.event.get():
+                if evento.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                elif evento.type == pygame.KEYDOWN:
+                    # Control de volumen
+                    self._manejar_controles_volumen(evento.key)
+                    
+                    if evento.key == pygame.K_UP:
+                        seleccion = (seleccion - 1) % len(opciones)
+                        self.audio_manager.reproducir_sonido("cursor")
+                    elif evento.key == pygame.K_DOWN:
+                        seleccion = (seleccion + 1) % len(opciones)
+                        self.audio_manager.reproducir_sonido("cursor")
+                    elif evento.key == pygame.K_RETURN or evento.key == pygame.K_ESCAPE:
+                        if evento.key == pygame.K_ESCAPE or opciones[seleccion] == "Continuar":
+                            return True  # Continuar jugando
+                        elif opciones[seleccion] == "Cheats":
+                            self.menu_cheats(juego)  # Abrir menú de cheats
+                        elif opciones[seleccion] == "Volver al menu":
+                            return False  # Salir al menú
+
+            # Dibujar fondo congelado
+            self.pantalla.blit(fondo_pausa, (0, 0))
+
+            # Overlay oscuro
+            overlay = pygame.Surface((ANCHO, ALTO), pygame.SRCALPHA)
+            overlay.fill((15, 15, 30, 180))
+            self.pantalla.blit(overlay, (0, 0))
+
+            # Dibujar Dragon Radar si está disponible
+            if radar_img and radar_rect:
+                self.pantalla.blit(radar_img, radar_rect)
+                y_inicio = radar_rect.top + escalar // 2 - 60
+            else:
+                # Título si no hay radar
+                titulo = self.fuente_grande.render("PAUSA", True, AMARILLO)
+                self.pantalla.blit(titulo, (ANCHO // 2 - titulo.get_width() // 2, 100))
+                y_inicio = 250
+
+            # Dibujar opciones
+            for i, opcion in enumerate(opciones):
+                color = AMARILLO if i == seleccion else NARANJA
+                texto = self.fuente_grande.render(opcion, True, color)
+                rect = texto.get_rect(center=(ANCHO // 2, y_inicio + i * 50))
+                self.pantalla.blit(texto, rect)
+
+            pygame.display.flip()
+            self.reloj.tick(FPS_MENU)
+
+    def menu_cheats(self, juego):
+        """Menu de cheats durante la pausa"""
+        opciones = [
+            "Vida infinita J1",
+            "Vida infinita J2", 
+            "Stamina infinita J1",
+            "Stamina infinita J2",
+            "One Hit Kill J1",
+            "One Hit Kill J2",
+            "Desactivar todos",
+            "Volver"
+        ]
+        seleccion = 0
+
+        # Estado de cheats (mantener entre llamadas)
+        if not hasattr(juego, 'cheats_activos'):
+            juego.cheats_activos = {
+                "vida_inf_j1": False,
+                "vida_inf_j2": False,
+                "stamina_inf_j1": False,
+                "stamina_inf_j2": False,
+                "one_hit_j1": False,
+                "one_hit_j2": False
+            }
+
+        fondo_pausa = self.pantalla.copy()
+
+        while True:
+            for evento in pygame.event.get():
+                if evento.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                elif evento.type == pygame.KEYDOWN:
+                    self._manejar_controles_volumen(evento.key)
+                    
+                    if evento.key == pygame.K_UP:
+                        seleccion = (seleccion - 1) % len(opciones)
+                        self.audio_manager.reproducir_sonido("cursor")
+                    elif evento.key == pygame.K_DOWN:
+                        seleccion = (seleccion + 1) % len(opciones)
+                        self.audio_manager.reproducir_sonido("cursor")
+                    elif evento.key == pygame.K_RETURN:
+                        if opciones[seleccion] == "Vida infinita J1":
+                            juego.cheats_activos["vida_inf_j1"] = not juego.cheats_activos["vida_inf_j1"]
+                        elif opciones[seleccion] == "Vida infinita J2":
+                            juego.cheats_activos["vida_inf_j2"] = not juego.cheats_activos["vida_inf_j2"]
+                        elif opciones[seleccion] == "Stamina infinita J1":
+                            juego.cheats_activos["stamina_inf_j1"] = not juego.cheats_activos["stamina_inf_j1"]
+                        elif opciones[seleccion] == "Stamina infinita J2":
+                            juego.cheats_activos["stamina_inf_j2"] = not juego.cheats_activos["stamina_inf_j2"]
+                        elif opciones[seleccion] == "One Hit Kill J1":
+                            juego.cheats_activos["one_hit_j1"] = not juego.cheats_activos["one_hit_j1"]
+                            self._aplicar_one_hit_kill(juego.jugador1, juego.cheats_activos["one_hit_j1"])
+                        elif opciones[seleccion] == "One Hit Kill J2":
+                            juego.cheats_activos["one_hit_j2"] = not juego.cheats_activos["one_hit_j2"]
+                            self._aplicar_one_hit_kill(juego.jugador2, juego.cheats_activos["one_hit_j2"])
+                        elif opciones[seleccion] == "Desactivar todos":
+                            for key in juego.cheats_activos:
+                                juego.cheats_activos[key] = False
+                            # Restaurar daño normal
+                            self._aplicar_one_hit_kill(juego.jugador1, False)
+                            self._aplicar_one_hit_kill(juego.jugador2, False)
+                        elif opciones[seleccion] == "Volver":
+                            return
+                    elif evento.key == pygame.K_ESCAPE:
+                        return
+
+            # Dibujar fondo
+            self.pantalla.blit(fondo_pausa, (0, 0))
+
+            # Overlay
+            overlay = pygame.Surface((ANCHO, ALTO), pygame.SRCALPHA)
+            overlay.fill((15, 15, 30, 200))
+            self.pantalla.blit(overlay, (0, 0))
+
+            # Titulo
+            titulo = self.fuente_grande.render("CHEATS", True, AMARILLO)
+            self.pantalla.blit(titulo, (ANCHO // 2 - titulo.get_width() // 2, 50))
+
+            # Opciones con estado
+            y_inicio = 120
+            for i, opcion in enumerate(opciones):
+                color = AMARILLO if i == seleccion else NARANJA
+                
+                # Mostrar estado (ON/OFF)
+                estado = ""
+                if "Vida infinita J1" == opcion:
+                    estado = " [ON]" if juego.cheats_activos["vida_inf_j1"] else " [OFF]"
+                elif "Vida infinita J2" == opcion:
+                    estado = " [ON]" if juego.cheats_activos["vida_inf_j2"] else " [OFF]"
+                elif "Stamina infinita J1" == opcion:
+                    estado = " [ON]" if juego.cheats_activos["stamina_inf_j1"] else " [OFF]"
+                elif "Stamina infinita J2" == opcion:
+                    estado = " [ON]" if juego.cheats_activos["stamina_inf_j2"] else " [OFF]"
+                elif "One Hit Kill J1" == opcion:
+                    estado = " [ON]" if juego.cheats_activos["one_hit_j1"] else " [OFF]"
+                elif "One Hit Kill J2" == opcion:
+                    estado = " [ON]" if juego.cheats_activos["one_hit_j2"] else " [OFF]"
+                
+                texto = self.fuente_pequena.render(opcion + estado, True, color)
+                rect = texto.get_rect(center=(ANCHO // 2, y_inicio + i * 35))
+                self.pantalla.blit(texto, rect)
+
+            pygame.display.flip()
+            self.reloj.tick(FPS_MENU)
+
+    def _aplicar_one_hit_kill(self, jugador, activar: bool):
+        """Aplica o desactiva el one hit kill modificando el daño del jugador"""
+        from src.utils.config import CombatConfig
+        
+        if activar:
+            # Daño mortal
+            jugador.dano_golpe_j = 100
+            jugador.dano_patada_k = 100
+            jugador.dano_bola = 100
+        else:
+            # Restaurar valores normales
+            jugador.dano_golpe_j = CombatConfig.DANO_GOLPE
+            jugador.dano_patada_k = CombatConfig.DANO_PATADA
+            jugador.dano_bola = CombatConfig.DANO_BOLA
